@@ -1,9 +1,22 @@
 {
-    "name": "laravel/laravel",
+    "name": "opvirtual/laravel-ops",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
-    "license": "MIT",
+    "description": "Centralized multi-application management platform for Laravel",
+    "keywords": ["laravel", "operations", "management", "monitoring", "devops"],
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Olusegun",
+            "email": "paultnd@gmail.com",
+            "homepage": "https://github.com/vi-techsys",
+            "role": "Developer"
+        },
+        {
+            "name": "OP Virtual Technology Systems Ltd",
+            "homepage": "https://vitechsys.com.ng",
+            "role": "Company"
+        }
+    ],
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.0",
