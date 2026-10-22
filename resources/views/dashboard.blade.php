@@ -3,18 +3,21 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <div class="hero-section">
+    <!-- Hero Section -->
+    <div class="bg-primary text-white py-5 mb-4">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold mb-3">Centralized Laravel Management</h1>
+                    <h1 class="display-5 fw-bold mb-3">Welcome back, {{ Auth::user()->name }}!</h1>
                     <p class="lead mb-4">
-                        Monitor, diagnose, and manage multiple Laravel applications from one central dashboard.
-                        Execute approved operations, track health status, and maintain control across your infrastructure.
+                        Monitor, diagnose, and manage your Laravel applications from one central dashboard.
                     </p>
                     <div class="d-flex gap-3">
-                        <a href="{{ route('health') }}" class="btn btn-light btn-lg">
-                            View System Health
+                        <a href="{{ route('applications.create') }}" class="btn btn-light btn-lg">
+                            + Register Application
+                        </a>
+                        <a href="{{ route('applications.index') }}" class="btn btn-outline-light btn-lg">
+                            View All Applications
                         </a>
                     </div>
                 </div>
@@ -27,149 +30,157 @@
         <!-- Status Cards -->
         <div class="row g-4 mb-4">
             <div class="col-md-4">
-                <div class="card stat-card bg-white">
-                    <div class="card-body">
-                        <div class="stat-icon bg-primary bg-opacity-10 text-primary">
-                            📊
-                        </div>
-                        <h6 class="text-muted text-uppercase small mb-2">Applications</h6>
-                        <h2 class="fw-bold mb-0">0</h2>
-                        <small class="text-muted">Registered targets</small>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card stat-card bg-white">
-                    <div class="card-body">
-                        <div class="stat-icon bg-success bg-opacity-10 text-success">
-                            ✓
-                        </div>
-                        <h6 class="text-muted text-uppercase small mb-2">Reachable</h6>
-                        <h2 class="fw-bold mb-0">0</h2>
-                        <small class="text-muted">Healthy connections</small>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card stat-card bg-white">
-                    <div class="card-body">
-                        <div class="stat-icon bg-warning bg-opacity-10 text-warning">
-                            ⚠
-                        </div>
-                        <h6 class="text-muted text-uppercase small mb-2">Attention</h6>
-                        <h2 class="fw-bold mb-0">0</h2>
-                        <small class="text-muted">Need monitoring</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Getting Started Section -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-5">
-                        <h3 class="fw-bold mb-4">Getting Started</h3>
-                        
-                        <div class="row g-4">
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-start">
-                                    <div class="flex-shrink-0">
-                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                            1
-                                        </div>
-                                    </div>
-                                    <div class="ms-3">
-                                        <h5 class="fw-bold mb-2">Register Applications</h5>
-                                        <p class="text-muted mb-0">
-                                            Add your Laravel applications to the management dashboard with their connection details.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-start">
-                                    <div class="flex-shrink-0">
-                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                            2
-                                        </div>
-                                    </div>
-                                    <div class="ms-3">
-                                        <h5 class="fw-bold mb-2">Deploy Connectors</h5>
-                                        <p class="text-muted mb-0">
-                                            Install the lightweight connector on each managed application for secure communication.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-start">
-                                    <div class="flex-shrink-0">
-                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                            3
-                                        </div>
-                                    </div>
-                                    <div class="ms-3">
-                                        <h5 class="fw-bold mb-2">Monitor Health</h5>
-                                        <p class="text-muted mb-0">
-                                            Track connection status, view health history, and receive alerts for issues.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-start">
-                                    <div class="flex-shrink-0">
-                                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                            4
-                                        </div>
-                                    </div>
-                                    <div class="ms-3">
-                                        <h5 class="fw-bold mb-2">Execute Operations</h5>
-                                        <p class="text-muted mb-0">
-                                            Run approved Artisan commands, clear caches, manage migrations, and more.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr class="my-5">
-
-                        <div class="alert alert-info mb-0">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3">
-                                    <strong>Stage 1 Complete!</strong>
-                                </div>
+                <a href="{{ route('applications.index') }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    The foundation is ready. Next: Authentication & Application Registry (Stage 2).
+                                    <h6 class="text-muted text-uppercase small mb-2">Total Applications</h6>
+                                    <h2 class="fw-bold mb-0">{{ $stats['total'] }}</h2>
+                                    <small class="text-muted">Registered targets</small>
                                 </div>
+                                <div class="fs-1 text-primary opacity-25">📊</div>
                             </div>
                         </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="{{ route('applications.index') }}?status=connected" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted text-uppercase small mb-2">Connected</h6>
+                                    <h2 class="fw-bold mb-0 text-success">{{ $stats['connected'] }}</h2>
+                                    <small class="text-muted">Healthy connections</small>
+                                </div>
+                                <div class="fs-1 text-success opacity-25">✓</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="{{ route('applications.index') }}?status=pending" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted text-uppercase small mb-2">Needs Attention</h6>
+                                    <h2 class="fw-bold mb-0 text-warning">{{ $stats['pending'] + $stats['disconnected'] }}</h2>
+                                    <small class="text-muted">Pending or disconnected</small>
+                                </div>
+                                <div class="fs-1 text-warning opacity-25">⚠</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Activity and Attention Needed -->
+        <div class="row g-4">
+            <!-- Recent Health Checks -->
+            <div class="col-md-7">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Recent Activity</h5>
+                        <a href="{{ route('applications.index') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                    </div>
+                    <div class="card-body p-0">
+                        @if($recentHealthChecks->count() > 0)
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Application</th>
+                                            <th>Status</th>
+                                            <th>Checked</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($recentHealthChecks as $check)
+                                            <tr>
+                                                <td>
+                                                    <a href="{{ route('applications.show', $check->managedApplication) }}" class="fw-bold text-decoration-none">
+                                                        {{ $check->managedApplication->name }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-{{ $check->status_badge_class }}">
+                                                        {{ ucfirst($check->status) }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <small class="text-muted">{{ $check->checked_at->diffForHumans() }}</small>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="text-center py-5">
+                                <div class="text-muted mb-2">No recent health checks</div>
+                                <small class="text-muted">Connect an application to see activity here</small>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Applications Needing Attention -->
+            <div class="col-md-5">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Needs Attention</h5>
+                    </div>
+                    <div class="card-body">
+                        @if($applicationsNeedingAttention->count() > 0)
+                            <div class="list-group list-group-flush">
+                                @foreach($applicationsNeedingAttention as $app)
+                                    <a href="{{ route('applications.show', $app) }}" class="list-group-item list-group-item-action d-flex align-items-center px-0">
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">{{ $app->name }}</div>
+                                            <small class="text-muted">{{ $app->base_url }}</small>
+                                        </div>
+                                        <span class="badge bg-{{ $app->status_badge_class }}">
+                                            {{ ucfirst($app->connection_status) }}
+                                        </span>
+                                    </a>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-4">
+                                <div class="text-success fs-1 mb-2">✓</div>
+                                <div class="text-muted">All applications are healthy!</div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Quick Actions -->
+        @if($stats['total'] == 0)
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm bg-light">
+                        <div class="card-body p-5 text-center">
+                            <h3 class="fw-bold mb-3">Get Started</h3>
+                            <p class="text-muted mb-4">
+                                Register your first Laravel application to begin centralized management
+                            </p>
+                            <a href="{{ route('applications.create') }}" class="btn btn-primary btn-lg">
+                                + Register Your First Application
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-5">
-        <div class="container text-center">
-            <p class="mb-0">
-                <strong>{{ config('app.name', 'Laravel Ops') }}</strong> — Centralized Multi-Application Management Platform
-            </p>
-            <small class="text-muted">
-                Running on Laravel {{ app()->version() }} | PHP {{ PHP_VERSION }}
-            </small>
-        </div>
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection

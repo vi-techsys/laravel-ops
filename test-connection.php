@@ -43,8 +43,8 @@ if ($result['success']) {
     echo "\n";
     
     echo "🔧 Troubleshooting:\n";
-    echo "1. Check if xpress_stocker is running: http://localhost/xpress_stocker\n";
-    echo "2. Check if CONNECTOR_API_KEY is set in xpress_stocker/.env\n";
-    echo "3. Check if CONNECTOR_API_SECRET is set in xpress_stocker/.env\n";
-    echo "4. Try accessing: http://localhost/xpress_stocker/api/connector/v1/health\n";
+    echo "1. Check if app is running: http://...\n";
+    echo "2. Check if CONNECTOR_API_KEY is set in http://.env\n";
+    echo "3. Check if CONNECTOR_API_SECRET is set in http://.env\n";
+    echo "4. Try accessing: http://app.../api/connector/v1/health\n";
 }

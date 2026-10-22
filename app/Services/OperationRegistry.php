@@ -159,17 +159,28 @@ class OperationRegistry
     public static function validateParameters(string $operation, array $parameters, ?ManagedApplication $application = null): array
     {
         $op = static::get($operation, $application);
-        
+
         if (!$op) {
             return ['valid' => false, 'errors' => ['Operation not found']];
         }
 
         $errors = [];
         $allowedParams = $op['parameters'] ?? [];
+        
+        // Extract parameter names from the parameters array
+        // Parameters can be either [['name' => 'param1', ...], ...] or ['param1', 'param2', ...]
+        $allowedParamNames = [];
+        foreach ($allowedParams as $param) {
+            if (is_array($param) && isset($param['name'])) {
+                $allowedParamNames[] = $param['name'];
+            } elseif (is_string($param)) {
+                $allowedParamNames[] = $param;
+            }
+        }
 
         // Check for unexpected parameters
         foreach (array_keys($parameters) as $key) {
-            if (!in_array($key, $allowedParams)) {
+            if (!in_array($key, $allowedParamNames)) {
                 $errors[] = "Unexpected parameter: {$key}";
             }
         }

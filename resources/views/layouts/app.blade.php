@@ -9,7 +9,7 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <style>
         body {
             background-color: #f8f9fa;
@@ -19,6 +19,7 @@
         }
         .navbar {
             background-color: #212529 !important;
+            flex-shrink: 0;
         }
         main {
             flex: 1;
@@ -30,7 +31,7 @@
             margin-top: auto;
         }
     </style>
-    
+
     @stack('styles')
 </head>
 <body>
@@ -111,8 +112,21 @@
         </div>
     @endif
 
+    @if (session('enrollment_token'))
+        <div class="container mt-3">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <strong>Enrollment Token Generated:</strong>
+                <code class="ms-2">{{ session('enrollment_token') }}</code>
+                @if (session('token_expires_at'))
+                    <small class="text-muted d-block mt-1">Expires: {{ session('token_expires_at') }}</small>
+                @endif
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    @endif
+
     <!-- Main Content -->
-    <main class="py-4">
+    <main>
         @yield('content')
     </main>
 
@@ -130,7 +144,7 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     @stack('scripts')
 </body>
 </html>

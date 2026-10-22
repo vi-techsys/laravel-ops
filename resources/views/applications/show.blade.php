@@ -32,8 +32,20 @@
     <div class="row g-4 mb-4">
         <div class="col-md-6">
             <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Connection Status</h5>
+                    @if(!$application->isRevoked())
+                        <form method="POST" action="{{ route('applications.test-connection', $application) }}">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-{{ $application->isConnected() ? 'outline-primary' : 'primary' }}">
+                                @if($application->isConnected())
+                                    🔄 Retry Connection
+                                @else
+                                    🔌 Connect
+                                @endif
+                            </button>
+                        </form>
+                    @endif
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -42,7 +54,7 @@
                             {{ ucfirst($application->connection_status) }}
                         </span>
                     </div>
-                    
+
                     @if($application->connector_version)
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <span class="text-muted">Connector Version:</span>
@@ -245,6 +257,17 @@ function copyToClipboard(text) {
         console.error('Failed to copy: ', err);
     });
 }
+
+// Auto-dismiss alerts after 5 seconds
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+        setTimeout(function() {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        }, 5000);
+    });
+});
 </script>
 @endpush
 @endsection

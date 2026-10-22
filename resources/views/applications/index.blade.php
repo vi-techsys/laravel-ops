@@ -103,6 +103,14 @@
                                         <a href="{{ route('applications.edit', $app) }}" class="btn btn-outline-secondary">
                                             Edit
                                         </a>
+                                        @if(!$app->isRevoked())
+                                            <form method="POST" action="{{ route('applications.test-connection', $app) }}" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-{{ $app->isConnected() ? 'outline-primary' : 'primary' }}" title="{{ $app->isConnected() ? 'Retry connection' : 'Connect to application' }}">
+                                                    {{ $app->isConnected() ? '🔄' : '🔌' }}
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
