@@ -39,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [\App\Http\Controllers\OperationController::class, 'index'])->name('index');
         Route::get('/create/{operation?}', [\App\Http\Controllers\OperationController::class, 'create'])->name('create');
         Route::post('/execute', [\App\Http\Controllers\OperationController::class, 'store'])->name('store');
+        Route::get('/seeders/list', [\App\Http\Controllers\OperationController::class, 'seeders'])->name('seeders');
         Route::get('/{operation}', [\App\Http\Controllers\OperationController::class, 'show'])->name('show');
         Route::post('/{operation}/confirm', [\App\Http\Controllers\OperationController::class, 'confirm'])->name('confirm');
     });

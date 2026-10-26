@@ -102,8 +102,40 @@
                             <!-- Parameter Input Fields -->
                             @php
                                 $parameters = $operationDetails['parameters'] ?? [];
+                                $isDbSeed = request()->route('operation') === 'db:seed';
                             @endphp
-                            @if(count($parameters) > 0)
+                            @if($isDbSeed)
+                                <div class="alert alert-secondary">
+                                    <h6 class="alert-heading"><strong>🌱 Select Seeder</strong></h6>
+                                    <p class="mb-3">Choose a seeder to run, or run the default DatabaseSeeder:</p>
+
+                                    <div id="seederLoading" class="text-center py-3">
+                                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <span class="ms-2">Loading available seeders...</span>
+                                    </div>
+
+                                    <div id="seederError" class="alert alert-danger d-none"></div>
+
+                                    <div id="seederList" class="d-none">
+                                        <div class="form-check mb-2 p-2 bg-light rounded">
+                                            <input class="form-check-input" type="radio" name="parameters[class]" value="" id="seeder_all" checked>
+                                            <label class="form-check-label fw-bold" for="seeder_all">
+                                                🔄 Run All (DatabaseSeeder - default)
+                                            </label>
+                                            <small class="form-text d-block">Runs the main DatabaseSeeder which typically calls all other seeders</small>
+                                        </div>
+
+                                        <hr>
+                                        <p class="small text-muted mb-2"><strong>Or select a specific seeder:</strong></p>
+
+                                        <div id="seederItems">
+                                            <!-- Seeder items will be injected here via JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+                            @elseif(count($parameters) > 0)
                                 <div class="alert alert-secondary">
                                     <h6 class="alert-heading"><strong>📝 Required Parameters</strong></h6>
                                     <p class="mb-3">This operation requires the following parameters:</p>
@@ -185,18 +217,18 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form');
     const executeBtn = document.getElementById('executeBtn');
-    
+
     if (form && executeBtn) {
         form.addEventListener('submit', function(e) {
             const riskLevel = @json($operationDetails['risk_level'] ?? 'medium');
             const operationName = @json($operationDetails['name'] ?? '');
-            
+
             // Show confirmation dialog for medium and high risk operations
             if (riskLevel === 'high' || riskLevel === 'medium') {
-                const message = riskLevel === 'high' 
+                const message = riskLevel === 'high'
                     ? `⚠️ HIGH RISK OPERATION ️\n\nAre you absolutely sure you want to execute "${operationName}"?\n\nThis operation can cause significant changes to your application.`
                     : `⚠️ Operation Confirmation\n\nAre you sure you want to execute "${operationName}"?`;
-                
+
                 if (!confirm(message)) {
                     e.preventDefault();
                     return false;
@@ -204,7 +236,72 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Load seeders if this is the db:seed operation
+    const isDbSeed = @json($isDbSeed ?? false);
+    if (isDbSeed) {
+        loadSeeders();
+    }
 });
+
+function loadSeeders() {
+    const loadingEl = document.getElementById('seederLoading');
+    const errorEl = document.getElementById('seederError');
+    const listEl = document.getElementById('seederList');
+    const itemsEl = document.getElementById('seederItems');
+
+    const seedersUrl = @json(route('applications.operations.seeders', $application));
+
+    fetch(seedersUrl)
+        .then(response => response.json())
+        .then(data => {
+            loadingEl.classList.add('d-none');
+
+            if (data.success && data.seeders && data.seeders.length > 0) {
+                listEl.classList.remove('d-none');
+
+                data.seeders.forEach(function(seeder) {
+                    const div = document.createElement('div');
+                    div.className = 'form-check mb-1 p-2';
+
+                    const input = document.createElement('input');
+                    input.className = 'form-check-input';
+                    input.type = 'radio';
+                    input.name = 'parameters[class]';
+                    input.value = seeder.fqcn;
+                    input.id = 'seeder_' + seeder.class_name;
+
+                    const label = document.createElement('label');
+                    label.className = 'form-check-label';
+                    label.htmlFor = 'seeder_' + seeder.class_name;
+                    label.innerHTML = '<strong>' + seeder.class_name + '</strong>';
+
+                    const small = document.createElement('small');
+                    small.className = 'form-text d-block text-muted';
+                    small.textContent = seeder.file;
+
+                    div.appendChild(input);
+                    div.appendChild(label);
+                    div.appendChild(small);
+                    itemsEl.appendChild(div);
+                });
+            } else if (data.success) {
+                listEl.classList.remove('d-none');
+                const noSeeders = document.createElement('p');
+                noSeeders.className = 'text-muted mb-0';
+                noSeeders.textContent = 'No specific seeder files found. Only the default DatabaseSeeder is available.';
+                itemsEl.appendChild(noSeeders);
+            } else {
+                errorEl.textContent = data.error || 'Failed to load seeders';
+                errorEl.classList.remove('d-none');
+            }
+        })
+        .catch(function(err) {
+            loadingEl.classList.add('d-none');
+            errorEl.textContent = 'Connection error: ' + err.message;
+            errorEl.classList.remove('d-none');
+        });
+}
 </script>
 @endpush
 @endsection

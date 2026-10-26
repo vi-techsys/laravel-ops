@@ -44,7 +44,7 @@ class ConnectorClient
     public function executeOperation(string $operation, array $parameters = []): array
     {
         $startTime = microtime(true);
-        
+
         $result = $this->sendSignedRequest('POST', '/api/connector/v1/operations/execute', [
             'operation' => $operation,
             'parameters' => $parameters,
@@ -57,6 +57,14 @@ class ConnectorClient
         }
 
         return $result;
+    }
+
+    /**
+     * List available seeders from the connector.
+     */
+    public function listSeeders(): array
+    {
+        return $this->sendSignedRequest('GET', '/api/connector/v1/seeders');
     }
 
     /**

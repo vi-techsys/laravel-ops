@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ManagedApplication;
 use App\Models\OperationResult;
+use App\Services\ConnectorClient;
 use App\Services\OperationExecutor;
 use App\Services\OperationRegistry;
 use Illuminate\Http\Request;
@@ -133,5 +134,39 @@ class OperationController extends Controller
         $operation->confirm();
 
         return back()->with('success', 'Operation confirmed. You can now execute it.');
+    }
+
+    /**
+     * List available seeders from the connector (AJAX).
+     */
+    public function seeders(ManagedApplication $application)
+    {
+        $this->authorize('connect', $application);
+
+        try {
+            $client = new ConnectorClient($application);
+            $result = $client->listSeeders();
+
+            if ($result['success'] && isset($result['data']['seeders'])) {
+                return response()->json([
+                    'success' => true,
+                    'seeders' => $result['data']['seeders'],
+                    'count' => $result['data']['count'] ?? count($result['data']['seeders']),
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'error' => $result['error'] ?? 'Failed to fetch seeders',
+                'seeders' => [],
+            ], 500);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Connection failed: ' . $e->getMessage(),
+                'seeders' => [],
+            ], 500);
+        }
     }
 }
